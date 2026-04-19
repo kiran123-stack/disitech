@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DisiTech — Web Development That Works</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    /* Base colors and measurements */
+    --red: #ef4444;
+    --red-glow: rgba(239,68,68,0.15);
+    --green: #22c55e;
+    --green-glow: rgba(34,197,94,0.15);
+    --max: 1200px;
+    --r: 12px;
+    
+    /* 8px spacing system */
+    --s1: 8px; --s2: 16px; --s3: 24px; --s4: 32px;
+    --s5: 40px; --s6: 48px; --s7: 56px; --s8: 64px;
+    --s10: 80px; --s12: 96px;
+    
+    --nav-width: 66.66vw;
+  }
+
+  /* ─── THEMES (Black & White Alternating) ─── */
+  .theme-dark {
+    --bg: #0a0a0a;
+    --surface: #111111;
+    --surface-2: #161616;
+    --border: #1f1f1f;
+    --border-hover: #2e2e2e;
+    --text: #f0f0f0;
+    --text-muted: #9ca3af;
+    --text-faint: #4b5563;
+    --red-dim: rgba(239,68,68,0.08);
+    --green-dim: rgba(34,197,94,0.08);
+  }
+
+  .theme-light {
+    --bg: #ffffff;
+    --surface: #f9fafb;
+    --surface-2: #f3f4f6;
+    --border: #e5e7eb;
+    --border-hover: #d1d5db;
+    --text: #111827;
+    --text-muted: #4b5563;
+    --text-faint: #9ca3af;
+    --red-dim: rgba(239,68,68,0.12);
+    --green-dim: rgba(34,197,94,0.12);
+  }
+
+  html { 
+    scroll-behavior: smooth; 
+    overflow-x: hidden; /* Fixes X-axis scroll */
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden; /* Fixes X-axis scroll */
+    max-width: 100vw;
+  }
+
+  /* ─── NOISE OVERLAY ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.022;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ─── LAYOUT ─── */
+  .container { max-width: var(--max); margin: 0 auto; padding: 0 var(--s4); }
+  
+  /* Sections automatically inherit their applied theme variables */
+  section, footer { 
+    padding: var(--s8) 0; /* Reduced vertical height from s12 to s8 */
+    position: relative; 
+    background: var(--bg);
+    color: var(--text);
+    transition: background 0.3s ease;
+    overflow: hidden; /* Contains background glows preventing X-axis scroll */
+  }
+  
+  /* Override borders to use the current theme's border color */
+  section {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    width: var(--nav-width);
+    position: fixed; 
+    top: var(--s4); 
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    padding: var(--s2) var(--s4);
+    background: rgba(10, 10, 10, 0.85); /* Always dark for contrast */
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid #1f1f1f;
+    border-radius: 100px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+  .nav-inner {
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-family: 'UnifrakturCook', serif;
+    font-size: 24px;
+    color: #f0f0f0;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+  }
+  .logo span { color: var(--red); }
+  .nav-links { display: flex; gap: var(--s4); list-style: none; align-items: center; }
+  .nav-links a {
+    color: #9ca3af; font-size: 14px; font-weight: 500;
+    text-decoration: none; letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: #f0f0f0; }
+  .nav-cta {
+    background: var(--red); color: #fff;
+    padding: var(--s1) var(--s3);
+    border-radius: 100px; font-size: 14px; font-weight: 600;
+    text-decoration: none; letter-spacing: 0.02em;
+    transition: all 0.2s ease;
+  }
+  .nav-cta:hover { 
+    box-shadow: 0 0 20px var(--red-glow); 
+    transform: translateY(-1px);
+  }
+
+  /* ─── TYPOGRAPHY & LABELS ─── */
+  .section-label {
+    display: inline-block;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--text-faint);
+    margin-bottom: var(--s2);
+  }
+  .section-label.red { color: var(--red); }
+  .section-label.green { color: var(--green); }
+
+  .section-h2 {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 600; line-height: 1.15; letter-spacing: -0.025em;
+    color: var(--text); margin-bottom: var(--s3);
+  }
+  .section-desc {
+    font-size: 16px; color: var(--text-muted); font-weight: 400;
+    line-height: 1.75;
+  }
+  .center-text { text-align: center; }
+  .center-text .section-desc { margin: 0 auto; max-width: 600px; }
+
+  /* ─── BUTTONS ─── */
+  .btn-primary {
+    display: inline-flex; justify-content: center; align-items: center;
+    background: var(--red); color: #fff;
+    padding: 14px var(--s4);
+    border-radius: 8px; font-size: 15px; font-weight: 600;
+    text-decoration: none; letter-spacing: 0.01em;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+  }
+  .btn-primary:hover {
+    background: #dc2626;
+    box-shadow: 0 0 32px var(--red-glow), 0 4px 24px rgba(239,68,68,0.2);
+    transform: translateY(-2px);
+  }
+  .btn-secondary {
+    display: inline-flex; justify-content: center; align-items: center;
+    background: var(--surface); color: var(--text);
+    padding: 14px var(--s4);
+    border-radius: 8px; font-size: 15px; font-weight: 600;
+    text-decoration: none; letter-spacing: 0.01em;
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+  }
+  .btn-secondary:hover { 
+    border-color: var(--border-hover); 
+    background: var(--surface-2); 
+    transform: translateY(-2px);
+  }
+
+  /* ─── SPLIT LAYOUT (ALTERNATING) ─── */
+  .split-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--s8);
+    align-items: center;
+  }
+  .split-image {
+    width: 100%;
+    border-radius: var(--r);
+    overflow: hidden;
+    aspect-ratio: 4/3;
+  }
+  .split-image img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.7s ease;
+  }
+  
+  /* Standard Hover Scale */
+  .split-image:not(.animated-container):hover img {
+    transform: scale(1.03);
+  }
+
+  /* ─── IMAGE ANIMATION (SLOW TO FAST) ─── */
+  @keyframes slowFastMove {
+    0% { transform: scale(1.15) translateX(-6%); }
+    100% { transform: scale(1.15) translateX(6%); }
+  }
+  
+  .moving-img {
+    animation: slowFastMove 4.5s cubic-bezier(0.5, 0, 1, 1) infinite alternate;
+  }
+
+  /* ─── HERO ─── */
+  #hero {
+    min-height: 80vh; /* Reduced from 100vh */
+    display: flex; align-items: center;
+    padding-top: var(--s10); /* Adjusted padding */
+    border-top: none;
+  }
+  .hero-glow-r {
+    position: absolute; width: 600px; height: 600px;
+    background: radial-gradient(circle, var(--red-glow) 0%, transparent 70%);
+    top: -100px; right: -100px; pointer-events: none; z-index: -1;
+  }
+  .hero-h1 {
+    font-size: clamp(40px, 5.5vw, 72px);
+    font-weight: 600; line-height: 1.1;
+    letter-spacing: -0.03em; margin-bottom: var(--s4);
+  }
+  .hero-h1 em { font-style: normal; color: var(--red); }
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 18px);
+    color: var(--text-muted); font-weight: 400;
+    max-width: 560px; line-height: 1.7; margin-bottom: var(--s5);
+  }
+  .hero-actions { display: flex; gap: var(--s2); margin-bottom: var(--s4); flex-wrap: wrap; }
+  .hero-trust {
+    font-size: 13px; color: var(--text-faint); letter-spacing: 0.05em; font-weight: 500;
+  }
+  .hero-trust span { margin: 0 var(--s1); color: var(--border-hover); }
+   .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%);
+  }
+  .hero-glow-r {
+    position: absolute; width: 560px; height: 560px;
+    background: radial-gradient(circle, var(--red-glow) 0%, transparent 70%);
+    top: -80px; right: -120px; pointer-events: none;
+  }
+  .hero-glow-g {
+    position: absolute; width: 400px; height: 400px;
+    background: radial-gradient(circle, var(--green-glow) 0%, transparent 70%);
+    bottom: 40px; left: -80px; pointer-events: none;
+  }
+
+  /* ─── CARDS UI ─── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: var(--s4);
+    transition: all 0.3s ease;
+  }
+  .card.hover-red:hover {
+    border-color: var(--red);
+    box-shadow: 0 8px 32px var(--red-glow);
+    transform: translateY(-4px);
+  }
+  .card.hover-green:hover {
+    border-color: var(--green);
+    box-shadow: 0 8px 32px var(--green-glow);
+    transform: translateY(-4px);
+  }
+
+  /* ─── PROBLEM ─── */
+  .problem-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); margin-top: var(--s5);
+  }
+  .problem-closing {
+    margin-top: var(--s4); padding-top: var(--s3); border-top: 1px solid var(--border);
+    font-size: 16px; color: var(--text-muted);
+  }
+  .problem-closing strong { color: var(--text); font-weight: 600; }
+  .card-icon-red {
+    width: 40px; height: 40px; background: var(--red-dim); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; margin-bottom: var(--s3);
+  }
+  .card-icon-red svg { width: 20px; height: 20px; color: var(--red); }
+  
+  /* ─── SOLUTION ─── */
+  .solution-list { display: flex; flex-direction: column; gap: var(--s3); margin-top: var(--s5); }
+  .solution-item {
+    display: flex; gap: var(--s3); align-items: flex-start;
+    padding-bottom: var(--s3); border-bottom: 1px solid var(--border);
+  }
+  .solution-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .sol-num { font-size: 12px; font-weight: 700; color: var(--green); letter-spacing: 0.1em; padding-top: 4px; }
+  .sol-content h3 { font-size: 18px; font-weight: 600; color: var(--text); margin-bottom: var(--s1); }
+  .sol-content p { font-size: 15px; color: var(--text-muted); line-height: 1.6; }
+
+  /* ─── PROCESS ─── */
+  .process-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); margin-top: var(--s5);
+  }
+  .step-num { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--text-faint); margin-bottom: var(--s2); }
+
+  /* ─── RESULTS ─── */
+  .results-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s3); margin-top: var(--s5); }
+  .res-num { font-size: 12px; font-weight: 700; color: var(--green); letter-spacing: 0.1em; margin-bottom: var(--s2); display: block; }
+
+  /* ─── WORK (PROJECTS) ─── */
+  .case-cards { 
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s4); 
+    margin-top: var(--s6); margin-bottom: var(--s5);
+  }
+  .case-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r); overflow: hidden;
+    transition: all 0.3s ease; display: flex; flex-direction: column;
+  }
+  .case-card:hover { 
+    border-color: var(--border-hover); 
+    transform: translateY(-4px); 
+    box-shadow: 0 12px 40px rgba(0,0,0,0.1); 
+  }
+  .case-img-wrapper {
+    width: 100%; height: 220px; overflow: hidden; border-bottom: 1px solid var(--border);
+  }
+  .case-img-wrapper img {
+    width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease;
+  }
+  /* Don't apply standard hover zoom to the already animated ones */
+  .case-card:hover .case-img-wrapper img:not(.moving-img) { transform: scale(1.05); }
+  
+  .case-body { padding: var(--s4); flex: 1; }
+  .case-tag {
+    display: inline-block; background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 6px 12px; border-radius: 100px; margin-bottom: var(--s3);
+  }
+  .case-body h3 { font-size: 18px; font-weight: 600; margin-bottom: var(--s3); line-height: 1.4; }
+  .case-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: var(--s2); }
+  .case-row-label { font-size: 11px; font-weight: 700; color: var(--text-faint); letter-spacing: 0.06em; text-transform: uppercase; }
+  .case-row-val { font-size: 14px; color: var(--text-muted); }
+  .case-result-row { margin-top: var(--s3); padding-top: var(--s2); border-top: 1px solid var(--border); }
+  .case-result-row .case-row-val { color: var(--green); font-weight: 600; }
+
+  /* ─── WHY US ─── */
+  .why-wrap {
+    display: grid; grid-template-columns: 1fr 1fr; gap: var(--s8);
+  }
+  .why-points { display: flex; flex-direction: column; gap: var(--s2); margin-top: var(--s4); }
+  .why-point {
+    display: flex; gap: var(--s3); align-items: flex-start;
+    padding: var(--s3); background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; transition: border-color 0.2s;
+  }
+  .why-point:hover { border-color: var(--border-hover); }
+  .why-check { color: var(--green); margin-top: 2px; flex-shrink: 0; }
+  .why-point h4 { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .why-point p { font-size: 14px; color: var(--text-muted); }
+  
+  .why-stats {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--r); padding: var(--s6);
+    display: flex; flex-direction: column; gap: var(--s5);
+  }
+  .stat-item h3 { font-size: 48px; font-weight: 600; line-height: 1; margin-bottom: 8px; }
+  .stat-item h3 span { color: var(--red); }
+  .stat-item p { font-size: 15px; color: var(--text-muted); }
+  .stat-divider { height: 1px; background: var(--border); }
+
+  /* ─── TESTIMONIAL ─── */
+  .testimonial-block { max-width: 800px; margin: 0 auto; text-align: center; }
+  .quote-mark { font-size: 80px; line-height: 0.6; color: var(--border-hover); font-family: Georgia, serif; margin-bottom: var(--s3); display: block; }
+  .testimonial-block blockquote {
+    font-size: clamp(20px, 3vw, 28px); color: var(--text);
+    font-weight: 400; line-height: 1.6; letter-spacing: -0.01em;
+    margin-bottom: var(--s5);
+  }
+  .testimonial-author { display: flex; align-items: center; gap: var(--s3); justify-content: center; }
+  .author-avatar {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--red-dim), var(--green-dim));
+    border: 1px solid var(--border); display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 600; color: var(--text-muted);
+  }
+  .author-info { text-align: left; }
+  .author-info .name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .author-info .role { font-size: 13px; color: var(--text-faint); }
+
+  /* ─── CTA & CONTACT FORM ─── */
+  #cta { text-align: center; position: relative; padding: var(--s8) 0; border-bottom: none; }
+  .cta-glow {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 100%, var(--red-dim) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .cta-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+  
+  /* Form styling matching existing theme perfectly */
+  .cta-form {
+    display: flex; flex-direction: column; gap: var(--s2);
+    max-width: 480px; margin: var(--s4) auto var(--s3); text-align: left;
+  }
+  .cta-form input, .cta-form textarea {
+    width: 100%; padding: 14px var(--s3);
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--text); font-family: inherit;
+    font-size: 15px; transition: all 0.3s ease;
+  }
+  .cta-form input:focus, .cta-form textarea:focus {
+    outline: none; border-color: var(--red);
+    box-shadow: 0 0 16px var(--red-glow);
+  }
+  .cta-form button {
+    width: 100%; cursor: pointer; border: none; font-family: inherit;
+    margin-top: 8px;
+  }
+
+  .cta-note { font-size: 14px; color: var(--text-faint); }
+
+  /* ─── FOOTER ─── */
+  footer { border-top: 1px solid var(--border); border-bottom: none; padding: var(--s6) 0; }
+  .footer-inner {
+    display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--s3);
+  }
+  .footer-text { font-size: 14px; color: var(--text-faint); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 900px) {
+    nav { width: 90vw; }
+    .split-layout { display: flex; flex-direction: column; gap: var(--s6); }
+    .split-content { order: 2; }
+    .split-image { order: 1; aspect-ratio: 16/9; }
+    .case-cards { grid-template-columns: 1fr; }
+    .why-wrap { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .problem-grid, .process-grid, .results-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body class="theme-dark">
+
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">Disi<span>Tech</span></a>
+    <ul class="nav-links">
+      <li><a href="#problem">Problems</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="#work">Work</a></li>
+    </ul>
+    <a href="#cta" class="nav-cta">Start a Project</a>
+  </div>
+</nav>
+
+<section id="hero" class="theme-dark">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow-g"></div>
+  <div class="hero-glow-r"></div>
+  <div class="container">
+    <div class="split-layout">
+      <div class="split-content">
+        <h1 class="hero-h1">Stop Losing Customers to a Website<br>That <em>Doesn't Work.</em></h1>
+        <p class="hero-sub">Most websites act like digital brochures. We build high-speed, conversion-focused platforms that turn visitors into customers. If your website isn't helping your business grow, it's holding it back.</p>
+        <div class="hero-actions">
+          <a href="#cta" class="btn-primary">Let's Build Your Growth Engine</a>
+          <a href="#work" class="btn-secondary">View Our Work</a>
+        </div>
+        <p class="hero-trust">Built for speed <span>·</span> Focused on results <span>·</span> Designed to grow your business</p>
+      </div>
+      <div class="split-image">
+        <img src="hero.jpg" alt="High performance web development mockup">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="problem" class="theme-light">
+  <div class="container">
+    <div class="split-layout">
+      <div class="split-image animated-container">
+        <img src="5259951.jpg" alt="Is your website costing you opportunities?" >
+      </div>
+      <div class="split-content">
+        <span class="section-label red">The Problem</span>
+        <h2 class="section-h2">Is Your Website Quietly Costing You Opportunities?</h2>
+        <p class="section-desc">Many businesses invest in websites that look good but don't perform. A slow, confusing, or invisible website doesn't just fail  it actively holds your business back.</p>
+        
+        <div class="problem-grid">
+          <div class="card hover-red">
+            <div class="card-icon-red">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+            </div>
+            <h3 style="font-size: 16px; margin-bottom: 8px;">Slow Load Times</h3>
+            <p style="font-size: 14px; color: var(--text-muted);">Visitors leave before your site even loads. Every second of delay costs you real business.</p>
+          </div>
+          <div class="card hover-red">
+            <div class="card-icon-red">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/><circle cx="12" cy="12" r="10"/></svg>
+            </div>
+            <h3 style="font-size: 16px; margin-bottom: 8px;">Confusing Experience</h3>
+            <p style="font-size: 14px; color: var(--text-muted);">Users don't know where to go next. A confusing site loses trust before a word is read.</p>
+          </div>
+          <div class="card hover-red">
+            <div class="card-icon-red">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+            </div>
+            <h3 style="font-size: 16px; margin-bottom: 8px;">Poor Scalability</h3>
+            <p style="font-size: 14px; color: var(--text-muted);">The site breaks when your business grows. Built cheaply, it limits rather than enables.</p>
+          </div>
+          <div class="card hover-red">
+            <div class="card-icon-red">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            </div>
+            <h3 style="font-size: 16px; margin-bottom: 8px;">Weak Visibility</h3>
+            <p style="font-size: 14px; color: var(--text-muted);">Customers can't find you on search engines. Your best work is invisible to the people who need it.</p>
+          </div>
+        </div>
+        <p class="problem-closing">You deserve a website that <strong>works as hard as you do.</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="solution" class="theme-dark">
+  <div class="container">
+    <div class="split-layout">
+      <div class="split-content">
+        <span class="section-label green">Our Approach</span>
+        <h2 class="section-h2">We Build Websites That Work for Your Business</h2>
+        <p class="section-desc">At DisiTech, we focus on performance, clarity, and long-term scalability. Every decision we make is based on helping your business grow — not just making things look good.</p>
+        
+        <div class="solution-list">
+          <div class="solution-item">
+            <span class="sol-num">01</span>
+            <div class="sol-content">
+              <h3>Speed</h3>
+              <p>Fast loading, fully optimized performance. Your site responds before your visitor loses patience.</p>
+            </div>
+          </div>
+          <div class="solution-item">
+            <span class="sol-num">02</span>
+            <div class="sol-content">
+              <h3>Clarity</h3>
+              <p>Clean structure that guides users toward action. No confusion, no dead ends.</p>
+            </div>
+          </div>
+          <div class="solution-item">
+            <span class="sol-num">03</span>
+            <div class="sol-content">
+              <h3>Stability</h3>
+              <p>Clean code that scales with your business. No shortcuts that break later.</p>
+            </div>
+          </div>
+          <div class="solution-item">
+            <span class="sol-num">04</span>
+            <div class="sol-content">
+              <h3>Strategy</h3>
+              <p>Every element serves a purpose. Design decisions are backed by business logic.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="split-image">
+        <img src="meeting.png" alt="Our Solution Approach">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process" class="theme-light">
+  <div class="container">
+    <div class="split-layout">
+      <div class="split-image">
+        <img src="4380.jpg" alt="Our Working Process">
+      </div>
+      <div class="split-content">
+        <span class="section-label">How We Work</span>
+        <h2 class="section-h2">A Clear Path from Idea to Impact</h2>
+        <p class="section-desc">We follow a structured framework designed to eliminate guesswork, keep you informed, and deliver results on time.</p>
+        
+        <div class="process-grid">
+          <div class="card">
+            <div class="step-num">01 — Discovery</div>
+            <h3 style="font-size: 16px; margin-bottom: 8px;">Understanding Your Business</h3>
+            <p style="font-size: 14px; color: var(--text-muted);">We start by understanding your business, goals, and audience before a single line of code is written.</p>
+          </div>
+          <div class="card">
+            <div class="step-num">02 — Strategy</div>
+            <h3 style="font-size: 16px; margin-bottom: 8px;">Planning the Journey</h3>
+            <p style="font-size: 14px; color: var(--text-muted);">We plan the structure and user journey for maximum clarity — so visitors always know where to go next.</p>
+          </div>
+          <div class="card">
+            <div class="step-num">03 — Development</div>
+            <h3 style="font-size: 16px; margin-bottom: 8px;">Building the Foundation</h3>
+            <p style="font-size: 14px; color: var(--text-muted);">We build a fast, scalable, and reliable website. No corners cut, no dependencies that become problems.</p>
+          </div>
+          <div class="card">
+            <div class="step-num">04 — Launch & Support</div>
+            <h3 style="font-size: 16px; margin-bottom: 8px;">Delivering and Growing</h3>
+            <p style="font-size: 14px; color: var(--text-muted);">We deliver, guide, and stay available after launch. Your growth is the measure of our success.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="results" class="theme-dark">
+  <div class="container">
+    <div class="split-layout">
+      <div class="split-content">
+        <span class="section-label green">What You Gain</span>
+        <h2 class="section-h2">The Business Case for a Better Website</h2>
+        <p class="section-desc">A well-built website isn't just a design — it's a business tool that supports growth, builds trust, and compounds over time.</p>
+        
+        <div class="results-grid">
+          <div class="card hover-green">
+            <span class="res-num">01</span>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">Stronger First Impression</h3>
+            <p style="font-size: 14px; color: var(--text-muted);">Visitors form an opinion in under three seconds. A professional, fast site communicates credibility before a word is read.</p>
+          </div>
+          <div class="card hover-green">
+            <span class="res-num">02</span>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">Better Conversion Rates</h3>
+            <p style="font-size: 14px; color: var(--text-muted);">Clear structure and intentional calls-to-action guide visitors toward the decisions that matter to your business.</p>
+          </div>
+          <div class="card hover-green">
+            <span class="res-num">03</span>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">Faster Performance</h3>
+            <p style="font-size: 14px; color: var(--text-muted);">Optimized code means lower bounce rates, better search rankings, and a smoother experience across all devices.</p>
+          </div>
+          <div class="card hover-green">
+            <span class="res-num">04</span>
+            <h3 style="font-size: 18px; margin-bottom: 8px;">Scalable Foundation</h3>
+            <p style="font-size: 14px; color: var(--text-muted);">Built to handle growth. Whether you expand your services or your traffic triples, the foundation holds.</p>
+          </div>
+        </div>
+      </div>
+      <div class="split-image">
+        <img src="19.png" alt="Business Results">
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work" class="theme-light">
+  <div class="container">
+    <div class="center-text">
+      <span class="section-label">Selected Work</span>
+      <h2 class="section-h2">Projects Built for Outcomes</h2>
+    </div>
+
+    <div class="case-cards">
+      <div class="case-card">
+        <div class="case-img-wrapper">
+          <img src="ecomm.jpg" alt="Scaling a Retail Business Online">
+        </div>
+        <div class="case-body">
+          <span class="case-tag">E-Commerce</span>
+          <h3>Scaling a Retail Business Online</h3>
+          <div class="case-row">
+            <span class="case-row-label">Challenge</span>
+            <span class="case-row-val">Low engagement, 80%+ bounce rate, and no clear conversion path</span>
+          </div>
+          <div class="case-row">
+            <span class="case-row-label">Solution</span>
+            <span class="case-row-val">Full rebuild focused on speed, product clarity, and checkout flow</span>
+          </div>
+          <div class="case-row case-result-row">
+            <span class="case-row-label">Result</span>
+            <span class="case-row-val">+60% lead volume, bounce rate halved within 30 days</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-img-wrapper">
+          <img src="b2b.jpg" alt="B2B Firm Expanding Internationally">
+        </div>
+        <div class="case-body">
+          <span class="case-tag">Professional Services</span>
+          <h3>B2B Firm Expanding Internationally</h3>
+          <div class="case-row">
+            <span class="case-row-label">Challenge</span>
+            <span class="case-row-val">Outdated site unable to communicate value to global clients</span>
+          </div>
+          <div class="case-row">
+            <span class="case-row-label">Solution</span>
+            <span class="case-row-val">Structured content architecture and multilingual-ready platform</span>
+          </div>
+          <div class="case-row case-result-row">
+            <span class="case-row-label">Result</span>
+            <span class="case-row-val">Improved qualified inquiries and faster client onboarding</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-img-wrapper ">
+          <img src="early.jpg" alt="Early-Stage Product Launch" >
+        </div>
+        <div class="case-body">
+          <span class="case-tag">SaaS / Tech</span>
+          <h3>Early-Stage Product Launch</h3>
+          <div class="case-row">
+            <span class="case-row-label">Challenge</span>
+            <span class="case-row-val">Product with strong potential but no online credibility</span>
+          </div>
+          <div class="case-row">
+            <span class="case-row-label">Solution</span>
+            <span class="case-row-val">Conversion-focused landing page with clear value proposition</span>
+          </div>
+          <div class="case-row case-result-row">
+            <span class="case-row-label">Result</span>
+            <span class="case-row-val">Tripled demo sign-ups in the first month post-launch</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="center-text">
+      <p class="section-desc">We measure success by the results our clients see not by visual awards.</p>
+    </div>
+  </div>
+</section>
+
+<section id="why" class="theme-dark">
+  <div class="container">
+    <div class="why-wrap">
+      <div>
+        <span class="section-label">Why DisiTech</span>
+        <h2 class="section-h2">Why Businesses Choose DisiTech</h2>
+        <p class="section-desc">We focus on one thing — building websites that perform. We combine technical expertise with business understanding to deliver work that actually makes an impact.</p>
+        
+        <div class="why-points">
+          <div class="why-point">
+            <svg class="why-check" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <div>
+              <h4>Specialized in Web Development</h4>
+              <p>We don't divide focus across branding, ads, or social. This is all we do.</p>
+            </div>
+          </div>
+          <div class="why-point">
+            <svg class="why-check" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <div>
+              <h4>Focused on Results, Not Trends</h4>
+              <p>We build for performance and longevity, not to win design awards.</p>
+            </div>
+          </div>
+          <div class="why-point">
+            <svg class="why-check" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <div>
+              <h4>Clear Communication and Process</h4>
+              <p>No surprises. You always know what's happening and why.</p>
+            </div>
+          </div>
+          <div class="why-point">
+            <svg class="why-check" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <div>
+              <h4>Built for Long-Term Growth</h4>
+              <p>Your site is an investment. We build it to compound, not expire.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="why-stats">
+        <div class="stat-item">
+          <h3>100<span>%</span></h3>
+          <p>Web development focus — no scattered services</p>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <h3>&lt;2<span>s</span></h3>
+          <p>Target load time on every project we ship</p>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <h3>0<span>px</span></h3>
+          <p>Wasted space every element earns its place</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonial" class="theme-light">
+  <div class="container">
+    <div class="testimonial-block">
+      <span class="quote-mark"></span>
+      <blockquote>Working with DisiTech felt different. They focused on how the website would impact my business, not just how it looked. The final result made a real difference.</blockquote>
+      <div class="testimonial-author">
+        <div class="author-avatar">PM</div>
+        <div class="author-info">
+          <div class="name">Prince</div>
+          <div class="role">Founder, Scaling Operations Business</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="cta" class="theme-dark">
+  <div class="cta-glow"></div>
+  <div class="container">
+    <div class="cta-inner">
+      <span class="section-label red">Get Started</span>
+      <h2 class="section-h2">Ready to Build a Website That Works?</h2>
+      <p class="section-desc">If you're serious about improving your online presence, send us a message below.</p>
+      
+      <form action="https://formsubmit.co/rammumar1981@gmail.com" method="POST" class="cta-form">
+        <input type="hidden" name="_captcha" value="false">
+        
+        <input type="text" name="name" placeholder="Your Name" required>
+        <input type="email" name="email" placeholder="Your Email Address" required>
+        <textarea name="message" placeholder="Tell us about your project goals..." rows="4" required></textarea>
+        <button type="submit" class="btn-primary">Send Message</button>
+      </form>
+      
+      <p class="cta-note">No pressure. Just a clear conversation about your goals.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="theme-dark">
+  <div class="container">
+    <div class="footer-inner">
+      <a href="#" class="logo">Disi<span>Tech</span></a>
+      <p class="footer-text">© 2025 DisiTech. Web Development for Serious Business.</p>
+      <a href="rammumar1981@gmail.com" class="footer-text">hello@disitech.com</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
