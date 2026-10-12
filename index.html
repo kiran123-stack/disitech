@@ -157,19 +157,21 @@
 }
 
 .logo img {
-  display: block;
-  width: 160px;
-  height: 52px;
-  object-fit: contain;
-  object-position: left center;
+    width: 190px;
+    height: 65px;
+    object-fit: contain;
+    object-position: left center;
+    display: block;
 }
+
 
 /* Mobile logo */
 @media (max-width: 600px) {
-  .logo img {
-    width: 125px;
-    height: 42px;
-  }
+ .logo img {
+        width: 145px;
+        height: 50px;
+    }
+
 }
 
 .logo span {
@@ -983,17 +985,21 @@
       color: var(--text-faint);
     }
 
-    footer .logo img {
-  width: 180px;
-  height: 60px;
-  max-width: 100%;
+  .footer-logo img,
+footer .logo img {
+    width: 210px;
+    height: 72px;
+    object-fit: contain;
+    object-position: left center;
+    display: block;
 }
-
 @media (max-width: 600px) {
-  footer .logo img {
-    width: 145px;
-    height: 48px;
-  }
+ 
+    .footer-logo img,
+    footer .logo img {
+        width: 165px;
+        height: 58px;
+    }
 }
 
     /* ─── RESPONSIVE ─── */
@@ -1088,6 +1094,37 @@
   .whatsapp-float {
     transition: none;
   }
+}
+
+    nav,
+.navbar {
+    background: rgba(255, 255, 255, 0.10) !important;
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+
+    border: 1px solid rgba(255, 255, 255, 0.24) !important;
+    border-radius: 100px;
+
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+nav a,
+.navbar a {
+    color: #f1f1f1;
+}
+
+nav a:hover,
+.navbar a:hover {
+    color: #ffffff;
+}
+
+@media (max-width: 600px) {
+    nav,
+    .navbar {
+        border-radius: 28px;
+    }
 }
   </style>
 </head>
