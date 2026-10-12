@@ -20,10 +20,10 @@
 
     :root {
       /* Base colors and measurements */
-     --red: #808080;
---red-glow: rgba(128, 128, 128, 0.15);
---green: #808080;
---green-glow: rgba(128, 128, 128, 0.15);
+    --red: #ef4444;
+--red-glow: rgba(239, 68, 68, 0.15);
+--green: #22c55e;
+--green-glow: rgba(34, 197, 94, 0.15);
       --max: 1200px;
       --r: 12px;
 
@@ -158,10 +158,18 @@
 
 .logo img {
   display: block;
-  width: 112px;
-  height: 40px;
+  width: 160px;
+  height: 52px;
   object-fit: contain;
   object-position: left center;
+}
+
+/* Mobile logo */
+@media (max-width: 600px) {
+  .logo img {
+    width: 125px;
+    height: 42px;
+  }
 }
 
 .logo span {
@@ -975,6 +983,19 @@
       color: var(--text-faint);
     }
 
+    footer .logo img {
+  width: 180px;
+  height: 60px;
+  max-width: 100%;
+}
+
+@media (max-width: 600px) {
+  footer .logo img {
+    width: 145px;
+    height: 48px;
+  }
+}
+
     /* ─── RESPONSIVE ─── */
     @media (max-width: 900px) {
       nav {
@@ -1086,7 +1107,7 @@
         <li><a href="#process">Process</a></li>
         <li><a href="#work">Work</a></li>
       </ul>
-      <a href="#cta" class="nav-cta">Start a Project</a>
+     
     </div>
   </nav>
 
@@ -1725,7 +1746,12 @@
   <footer class="theme-dark">
     <div class="container">
       <div class="footer-inner">
-        <a href="#" class="logo">Disi<span>Tech</span></a>
+       <a href="#" class="logo" aria-label="ARIN Home">
+  <img
+    src="https://res.cloudinary.com/smiudv7m/image/upload/v1791802297/ARIN_Futuristic_Minimalist_Wordmark-removebg-preview.png"
+    alt="ARIN"
+  >
+</a>
         <p class="footer-text">© 2025 DisiTech. Web Development for Serious Business.</p>
         <a href="mailto:rammumar1981@gmail.com" class="footer-text">hello@disitech.com</a>
       </div>
